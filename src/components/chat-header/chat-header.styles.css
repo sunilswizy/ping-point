@@ -1,0 +1,28 @@
+.chat-header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-around;
+  height: 80px;
+  padding: 0 0.5rem;
+}
+
+.chat-header-avatar {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-header-avatar-edit {
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.chat-header-username {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,0 +1,31 @@
+.message-input-container {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 12px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #555;
+  background-color: transparent;
+  padding: 0 10px;
+}
+
+.message-input::placeholder {
+  color: #ccc;
+}
+
+.message-input-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.message-icon {
+  cursor: pointer;
+}

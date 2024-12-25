@@ -1,0 +1,54 @@
+.chat-box {
+  display: flex;
+  width: 100%;
+  background-color: #281a34;
+  overflow: hidden;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.chat-box:hover {
+  background-color: #443451;
+}
+
+.chat-box-image {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.chat-box-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 65%;
+  overflow: hidden;
+}
+
+.chat-box-content-name {
+  font-size: 1rem;
+  color: white;
+}
+
+.chat-box-content-name,
+.chat-box-content-message {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-box-content-message {
+  font-size: 0.8rem;
+  color: #8e75a3;
+}
+
+.chat-box-unread {
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
