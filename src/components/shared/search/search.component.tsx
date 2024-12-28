@@ -1,10 +1,22 @@
+import { useState } from "react";
 import "./search.styles.css";
 
 interface SearchBarProps {
   placeholder: string;
+  onSearchMessage: (text: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  placeholder,
+  onSearchMessage,
+}) => {
+  const [searchText, setSearchText] = useState("");
+
+  const handleChange = (event) => {
+    setSearchText(event.target.value);
+    onSearchMessage(event.target.value);
+  };
+
   return (
     <div className="search-bar">
       <svg
@@ -22,6 +34,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
       <input
         type="text"
         placeholder={placeholder}
+        value={searchText}
+        onChange={handleChange}
         className="search-bar-input"
       />
     </div>

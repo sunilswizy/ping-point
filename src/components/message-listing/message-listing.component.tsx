@@ -18,12 +18,12 @@ const MessageListing: React.FC<IMessageListing> = ({ messages }) => {
 
   return (
     <div className="message-listing">
-      {messages.map((message, idx) => {
+      {messages.map((message) => {
         return (
           <Message
             key={message._id}
             message={message}
-            isCurrentUser={idx % 2 == 0}
+            isCurrentUser={message.senderId === "676ed7ac39f371fafb576a16"}
           />
         );
       })}

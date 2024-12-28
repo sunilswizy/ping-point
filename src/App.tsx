@@ -7,11 +7,21 @@ import {
 } from "react-router-dom";
 import HomePage from "./pages/home.page";
 import MainLayout from "./layout/main.layout";
+import LoginPage from "./pages/login.page";
+import ProductRoute from "./pages/protected.page";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
-      <Route index element={<HomePage />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route
+        index
+        element={
+          <ProductRoute>
+            <HomePage />
+          </ProductRoute>
+        }
+      />
     </Route>
   )
 );

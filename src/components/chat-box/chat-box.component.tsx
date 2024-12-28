@@ -12,11 +12,14 @@ const ChatBox: React.FC<IChatList> = ({
   chatType,
   isOnline,
 }) => {
+  const defaultImage =
+    chatImage || "https://storage.googleapis.com/pat-public/assets/Male.jpg";
+
   return (
     <div className="chat-box">
       <div className="chat-box-image">
         <ProfileAvatar
-          imageUrl={chatImage}
+          imageUrl={defaultImage}
           isOnline={isOnline && chatType === ChatTypes.private}
         />
       </div>

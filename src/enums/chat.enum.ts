@@ -24,6 +24,7 @@ export interface IMessage {
     senderName: string;
     timestamp: string;
     chatImage: string;
+    mediaUrl?: string;
 }
 
 

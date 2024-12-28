@@ -13,6 +13,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --bg-primary: #2d2b3d;
+  --bg-secondary: #363348;
+  --purple-primary: #9c27b0;
+  --purple-hover: #7c3aed;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --border-color: #4b5563;
 }
 
 @media (min-width: 641px) {

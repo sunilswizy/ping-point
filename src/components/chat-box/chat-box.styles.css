@@ -5,6 +5,7 @@
   overflow: hidden;
   gap: 0.5rem;
   cursor: pointer;
+  align-items: center;
 }
 
 .chat-box:hover {
@@ -30,7 +31,7 @@
 }
 
 .chat-box-content-name {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: white;
 }
 
