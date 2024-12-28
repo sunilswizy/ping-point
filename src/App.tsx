@@ -14,6 +14,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
       <Route path="login" element={<LoginPage />} />
+      <Route path="chat/:chatId" element={<HomePage />} />
       <Route
         index
         element={

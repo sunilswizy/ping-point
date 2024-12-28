@@ -9,6 +9,7 @@ interface IMessageListing {
 
 const MessageListing: React.FC<IMessageListing> = ({ messages }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -23,7 +24,7 @@ const MessageListing: React.FC<IMessageListing> = ({ messages }) => {
           <Message
             key={message._id}
             message={message}
-            isCurrentUser={message.senderId === "676ed7ac39f371fafb576a16"}
+            isCurrentUser={message.senderId === user.id}
           />
         );
       })}

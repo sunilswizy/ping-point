@@ -5,19 +5,33 @@ import { IChatData, IMessage } from "../../enums/chat.enum";
 import MessageListing from "../message-listing/message-listing.component";
 import MessageInput from "../shared/message-input/message-input.component";
 import { getData, postData } from "../../service/api-service";
+import { useNavigate, useParams } from "react-router-dom";
+import emptyConversation from "../../assets/empty-conversation.svg";
 
 const ChatWindow = () => {
   const [chatData, setChatData] = useState<IChatData | null>(null);
   const [chatDataListing, setChatDataListing] = useState<IMessage[]>([]);
   const [message, setMessage] = useState("");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const { chatId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChatData = async () => {
-      const response = await getData(
-        "messages/conversation/676ed7ac39f371fafb576a16/676ed7a639f371fafb576a13"
-      );
-      setChatData(response);
-      setChatDataListing(response.messages);
+      try {
+        if (!chatId) {
+          navigate("/");
+          return;
+        }
+
+        const response = await getData(
+          `messages/conversation/${chatId}/${user.id}`
+        );
+        setChatData(response);
+        setChatDataListing(response.messages);
+      } catch {
+        navigate("/");
+      }
     };
 
     fetchChatData();
@@ -29,12 +43,15 @@ const ChatWindow = () => {
     mediaUrl = ""
   ) => {
     const response = await postData("messages", {
-      recipientId: "676ed7ac39f371fafb576a16",
-      senderId: "676ed7a639f371fafb576a13",
+      recipientId: chatId,
+      senderId: user.id,
       content: message,
       messageType,
       mediaUrl,
     });
+
+    if (!response) return;
+    console.log(response);
 
     setChatData((prevData) => {
       if (prevData) {
@@ -58,7 +75,7 @@ const ChatWindow = () => {
 
   return (
     <div className="chat-window-container">
-      {chatData && (
+      {chatData ? (
         <>
           <ChatWindowHeader
             chatData={chatData}
@@ -77,6 +94,15 @@ const ChatWindow = () => {
             </div>
           </div>
         </>
+      ) : (
+        <div className="empty-conversation">
+          <div className="empty-conversation-image">
+            <img src={emptyConversation} alt="Empty Conversation" />
+          </div>
+          <div>
+            <h2>Select Chat to Begin a Conversation</h2>
+          </div>
+        </div>
       )}
     </div>
   );
