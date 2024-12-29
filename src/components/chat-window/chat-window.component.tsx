@@ -8,7 +8,11 @@ import { getData, postData } from "../../service/api-service";
 import { useNavigate, useParams } from "react-router-dom";
 import emptyConversation from "../../assets/empty-conversation.svg";
 
-const ChatWindow = () => {
+interface IChatListing {
+  userStatus: { username: string; status: string };
+}
+
+const ChatWindow: React.FC<IChatListing> = ({ userStatus }) => {
   const [chatData, setChatData] = useState<IChatData | null>(null);
   const [chatDataListing, setChatDataListing] = useState<IMessage[]>([]);
   const [message, setMessage] = useState("");
@@ -36,6 +40,17 @@ const ChatWindow = () => {
 
     fetchChatData();
   }, [chatId, navigate, user.id]);
+
+  useEffect(() => {
+    setChatData((prevData) => {
+      if (!prevData) return null;
+      return {
+        ...prevData,
+        isOnline: userStatus.status === "online",
+        lastSeen: new Date().toISOString(),
+      };
+    });
+  }, [userStatus]);
 
   const sendMessage = async (
     message: string,

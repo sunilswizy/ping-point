@@ -6,7 +6,11 @@ import ChatHeader from "../chat-header/chat-header.component";
 import { getData } from "../../service/api-service";
 import search from "../../assets/search.svg";
 
-const ChatListing = () => {
+interface IChatListing {
+  userStatus: { username: string; status: string };
+}
+
+const ChatListing: React.FC<IChatListing> = ({ userStatus }) => {
   const [chatList, setChatList] = useState<IChatList[]>([]);
   const [chatSearch, setChatSearch] = useState("");
   const [filterChatList, setFilterChatList] = useState<IChatList[]>([]);
@@ -20,6 +24,17 @@ const ChatListing = () => {
     };
     fetchChatList();
   }, []);
+
+  useEffect(() => {
+    setChatList((prevChatList) => {
+      return prevChatList.map((chat) => {
+        if (chat.chatName === userStatus.username) {
+          return { ...chat, isOnline: userStatus.status === "online" };
+        }
+        return chat;
+      });
+    });
+  }, [userStatus]);
 
   useMemo(() => {
     const filterChatList = chatList.filter((chat) =>
