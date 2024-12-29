@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./chat-listing.styles.css";
 import ChatBox from "../chat-box/chat-box.component";
 import { IChatList } from "../../enums/chat.enum";
@@ -8,6 +8,8 @@ import search from "../../assets/search.svg";
 
 const ChatListing = () => {
   const [chatList, setChatList] = useState<IChatList[]>([]);
+  const [chatSearch, setChatSearch] = useState("");
+  const [filterChatList, setFilterChatList] = useState<IChatList[]>([]);
 
   useEffect(() => {
     const fetchChatList = async () => {
@@ -19,11 +21,18 @@ const ChatListing = () => {
     fetchChatList();
   }, []);
 
+  useMemo(() => {
+    const filterChatList = chatList.filter((chat) =>
+      chat.chatName.toLowerCase().includes(chatSearch.toLowerCase())
+    );
+    setFilterChatList(filterChatList);
+  }, [chatSearch, chatList]);
+
   return (
     <div className="chat-listing">
-      <ChatHeader />
+      <ChatHeader setSearch={setChatSearch} />
       <div className="chat-listing-container">
-        {chatList.length ? (
+        {filterChatList.length ? (
           chatList.map((chat) => <ChatBox key={chat._id} {...chat} />)
         ) : (
           <div className="chat-listing-no-chat">

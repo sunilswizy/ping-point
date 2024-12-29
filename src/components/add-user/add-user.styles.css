@@ -1,0 +1,11 @@
+.chat-header-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chat-header-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

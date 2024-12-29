@@ -14,6 +14,7 @@ import { useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { postData, putData } from "../../service/api-service";
+import AddUserModel from "../add-user/add-user.component";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -29,7 +30,12 @@ const beforeUpload = (file: FileType) => {
   return true;
 };
 
-const ChatHeader = () => {
+interface ChatHeaderProps {
+  setSearch: (search: string) => void;
+}
+
+const ChatHeader: React.FC<ChatHeaderProps> = ({ setSearch }) => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -62,10 +68,6 @@ const ChatHeader = () => {
     setIsModalOpen(false);
   };
 
-  const onSearchMessage = (text: string) => {
-    console.log(text);
-  };
-
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -73,6 +75,7 @@ const ChatHeader = () => {
   };
 
   const handleChange: UploadProps["onChange"] = async (info) => {
+    setLoading(true);
     const file = info.file.originFileObj as FileType;
     await handleFileUpload(file);
     setLoading(false);
@@ -106,6 +109,10 @@ const ChatHeader = () => {
     setImageUrl(`https://pat-v2-stage.s3.amazonaws.com/${fileName}`);
   };
 
+  const onSearchMessage = (text: string) => {
+    setSearch(text);
+  };
+
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -119,6 +126,15 @@ const ChatHeader = () => {
         placeholder="Search for people or a group"
         onSearchMessage={onSearchMessage}
       />
+
+      <div className="chat-header-add-user">
+        <Button
+          type="default"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={() => setIsAddModalOpen(true)}
+        />
+      </div>
 
       <div className="chat-header-avatar">
         <Avatar
@@ -186,6 +202,12 @@ const ChatHeader = () => {
           />
         </div>
       </Modal>
+      {isAddModalOpen && (
+        <AddUserModel
+          isModalOpen={isAddModalOpen}
+          setIsModalOpen={setIsAddModalOpen}
+        />
+      )}
     </div>
   );
 };

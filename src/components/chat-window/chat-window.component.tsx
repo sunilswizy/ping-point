@@ -35,23 +35,25 @@ const ChatWindow = () => {
     };
 
     fetchChatData();
-  }, []);
+  }, [chatId, navigate, user.id]);
 
   const sendMessage = async (
     message: string,
     messageType: string,
     mediaUrl = ""
   ) => {
-    const response = await postData("messages", {
-      recipientId: chatId,
+    const payload = {
       senderId: user.id,
       content: message,
       messageType,
       mediaUrl,
-    });
+      ...(chatData?.chatType === "private" && { recipientId: chatId }),
+      ...(chatData?.chatType === "group" && { groupId: chatId }),
+    };
+
+    const response = await postData("messages", payload);
 
     if (!response) return;
-    console.log(response);
 
     setChatData((prevData) => {
       if (prevData) {
@@ -63,6 +65,11 @@ const ChatWindow = () => {
       return null;
     });
   };
+
+  useEffect(() => {
+    setMessage("");
+    setChatDataListing(chatData?.messages || []);
+  }, [chatData]);
 
   const onSearchMessage = (text: string) => {
     const messages = chatData?.messages;

@@ -1,6 +1,7 @@
 
 export interface IChatList {
     _id: string;
+    conversationID: string;
     chatType: string;
     chatName: string;
     chatImage: string;
@@ -11,7 +12,7 @@ export interface IChatList {
         senderName: string;
         timestamp: string;
     };
-    unreadCount: number;
+    unreadCount: { [key: string]: number };
     updatedAt: string;
     isOnline: boolean;
 }
