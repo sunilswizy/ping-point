@@ -20,6 +20,7 @@ const ChatBox: React.FC<IChatList> = ({
   const { chatId } = useParams();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const count = chatId === conversationID ? 0 : unreadCount[user.id] || 0;
+  unreadCount[user.id] = count;
 
   return (
     <div

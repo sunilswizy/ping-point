@@ -25,6 +25,7 @@ export interface IMessage {
     senderName: string;
     timestamp: string;
     chatImage: string;
+    groupId?: string;
     mediaUrl?: string;
 }
 

@@ -4,15 +4,18 @@ import { useEffect, useState } from "react";
 import { IChatData, IMessage } from "../../enums/chat.enum";
 import MessageListing from "../message-listing/message-listing.component";
 import MessageInput from "../shared/message-input/message-input.component";
-import { getData, postData } from "../../service/api-service";
+import { getData } from "../../service/api-service";
 import { useNavigate, useParams } from "react-router-dom";
 import emptyConversation from "../../assets/empty-conversation.svg";
+import { NEW_MESSAGE } from "../../enums/socket.types";
+import { Socket } from "socket.io-client";
 
 interface IChatListing {
   userStatus: { username: string; status: string };
+  socket: Socket | null;
 }
 
-const ChatWindow: React.FC<IChatListing> = ({ userStatus }) => {
+const ChatWindow: React.FC<IChatListing> = ({ userStatus, socket }) => {
   const [chatData, setChatData] = useState<IChatData | null>(null);
   const [chatDataListing, setChatDataListing] = useState<IMessage[]>([]);
   const [message, setMessage] = useState("");
@@ -52,12 +55,38 @@ const ChatWindow: React.FC<IChatListing> = ({ userStatus }) => {
     });
   }, [userStatus]);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on(NEW_MESSAGE, (newMessage) => {
+      if (
+        newMessage.recipientId === chatId ||
+        newMessage.groupId === chatId ||
+        newMessage.senderId === chatId
+      ) {
+        setChatData((prevData) => {
+          if (!prevData) return null;
+          return {
+            ...prevData,
+            messages: [...prevData.messages, newMessage],
+          };
+        });
+      }
+    });
+
+    return () => {
+      socket.off(NEW_MESSAGE);
+    };
+  }, [socket, chatId, user.id]);
+
   const sendMessage = async (
     message: string,
     messageType: string,
     mediaUrl = ""
   ) => {
     const payload = {
+      receiverUsername: chatData?.chatName,
+      senderUsername: user.username,
       senderId: user.id,
       content: message,
       messageType,
@@ -66,19 +95,9 @@ const ChatWindow: React.FC<IChatListing> = ({ userStatus }) => {
       ...(chatData?.chatType === "group" && { groupId: chatId }),
     };
 
-    const response = await postData("messages", payload);
-
-    if (!response) return;
-
-    setChatData((prevData) => {
-      if (prevData) {
-        return {
-          ...prevData,
-          messages: [...prevData.messages, response],
-        };
-      }
-      return null;
-    });
+    if (socket) {
+      socket.emit(NEW_MESSAGE, payload);
+    }
   };
 
   useEffect(() => {

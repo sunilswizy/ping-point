@@ -8,9 +8,10 @@ import search from "../../assets/search.svg";
 
 interface IChatListing {
   userStatus: { username: string; status: string };
+  newMessage: any;
 }
 
-const ChatListing: React.FC<IChatListing> = ({ userStatus }) => {
+const ChatListing: React.FC<IChatListing> = ({ userStatus, newMessage }) => {
   const [chatList, setChatList] = useState<IChatList[]>([]);
   const [chatSearch, setChatSearch] = useState("");
   const [filterChatList, setFilterChatList] = useState<IChatList[]>([]);
@@ -35,6 +36,45 @@ const ChatListing: React.FC<IChatListing> = ({ userStatus }) => {
       });
     });
   }, [userStatus]);
+
+  useEffect(() => {
+    if (!newMessage) return;
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    setChatList((prevChatList) => {
+      const formatted = prevChatList.map((chat) => {
+        if (
+          chat.conversationID === newMessage.senderId ||
+          chat.conversationID === newMessage.recipientId
+        ) {
+          return {
+            ...chat,
+            lastMessage: {
+              content: newMessage.content,
+              messageType: newMessage.messageType,
+              senderId: newMessage.senderId,
+              senderName: newMessage.senderName,
+              timestamp: newMessage.timestamp,
+            },
+            unreadCount: {
+              ...chat.unreadCount,
+              [user.id]: chat.unreadCount[user.id]
+                ? chat.unreadCount[user.id] + 1
+                : 1,
+            },
+          };
+        }
+        return chat;
+      });
+
+      formatted.sort((a, b) => {
+        const aTime = new Date(a.lastMessage.timestamp).getTime();
+        const bTime = new Date(b.lastMessage.timestamp).getTime();
+        return bTime - aTime;
+      });
+
+      return formatted;
+    });
+  }, [newMessage]);
 
   useMemo(() => {
     const filterChatList = chatList.filter((chat) =>
